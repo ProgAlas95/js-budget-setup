@@ -114,6 +114,40 @@ class UI {
     this.expenseAmount.textContent = total
     return total
   }
+  //edit expense
+  editExpense(element){
+    let id = parseInt(element.dataset.id)
+    let parent = element.parentElement.parentElement.parentElement
+    //remove from dom
+    this.expenseList.removeChild(parent)
+    //remove from the dom
+    let expense = this.itemList.filter(function (item) {
+      return item.id === id
+    })
+    //show value
+    this.expenseInput.value = expense[0].title
+    this.amountInput.value = expense[0].amount
+    //remove from the list
+    let tempList = this.itemList.filter(function (item) {
+      return item.id !== id
+    })
+    this.itemList = tempList
+    this.showBalance()
+  }
+  //delete expense
+  deleteExpense(element){
+    let id = parseInt(element.dataset.id)
+    let parent = element.parentElement.parentElement.parentElement
+    //remove from dom
+    this.expenseList.removeChild(parent)
+    //remove from the list
+    let tempList = this.itemList.filter(function (item) {
+      return item.id !== id
+    })
+    this.itemList = tempList
+    this.showBalance()
+
+  }
 }
 function  eventListner() {
   const budgetForm = document.getElementById('budget-form')
@@ -124,19 +158,24 @@ function  eventListner() {
   const ui = new UI()
 
   //budget form submit
-  budgetForm.addEventListener('submit', function () {
+  budgetForm.addEventListener('submit', function (event) {
     event.preventDefault()
     ui.submitBudgetForm()
       })
   //expense  form submit
-  expenseForm.addEventListener('submit', function () {
+  expenseForm.addEventListener('submit', function (event) {
     event.preventDefault()
     ui.submitExpenseForm()
   })
 
   //expense click form submit
-  expenseList.addEventListener('click', function () {
-
+  expenseList.addEventListener('click', function (event) {
+    if (event.target.parentElement.classList.contains('edit-icon')) {
+      ui.editExpense(event.target.parentElement)
+    }
+    else if (event.target.parentElement.classList.contains('delete-icon')) {
+      ui.deleteExpense(event.target.parentElement)
+    }
   })
 
 
